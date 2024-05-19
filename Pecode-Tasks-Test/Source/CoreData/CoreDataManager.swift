@@ -72,6 +72,7 @@ extension CoreDataManager {
                 entity.descriptionText  = model.description
                 entity.completionDate   = model.completionDate
                 entity.isCompleted      = model.isCompleted
+                entity.creationDate     = model.creationDate
                 
                 saveBackgroundContext()
                 
@@ -123,6 +124,7 @@ extension CoreDataManager {
                     result.descriptionText  = newModel.description
                     result.completionDate   = newModel.completionDate
                     result.isCompleted      = newModel.isCompleted
+                    result.creationDate     = newModel.creationDate
                     
                     saveBackgroundContext()
                 } else {

@@ -123,7 +123,7 @@ public final class CreateTaskController: UIView {
             description = descriptionField.text ?? ""
         }
         guard !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return nil }
-        return TaskModel(title: title, description: description, completionDate: date)
+        return TaskModel(title: title, description: description, creationDate: .now, completionDate: date)
         
     }
     public func hideKeyboard(){

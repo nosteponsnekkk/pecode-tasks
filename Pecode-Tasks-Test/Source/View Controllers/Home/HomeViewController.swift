@@ -124,17 +124,18 @@ public final class HomeViewController: UITableViewController {
     }
     @objc private func didTapSort(){
         let ac = UIAlertController(title: "Sorting", message: "Choose preferred sorting option", preferredStyle: .actionSheet)
-        ac.addAction(UIAlertAction(title: "Default", style: .default) { [weak self] _ in
+        ac.addAction(UIAlertAction(title: "By completion date", style: .default) { [weak self] _ in
             guard let self else { return }
-            viewModel.sorting = .default
+            viewModel.sorting = .byCompletionDate
+        })
+
+        ac.addAction(UIAlertAction(title: "By creation date", style: .default) { [weak self] _ in
+            guard let self else { return }
+            viewModel.sorting = .byCreationDate
         })
         ac.addAction(UIAlertAction(title: "By name", style: .default) { [weak self] _ in
             guard let self else { return }
             viewModel.sorting = .byName
-        })
-        ac.addAction(UIAlertAction(title: "By completion date", style: .default) { [weak self] _ in
-            guard let self else { return }
-            viewModel.sorting = .byDate
         })
         ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         ac.view.tintColor = .mainColor

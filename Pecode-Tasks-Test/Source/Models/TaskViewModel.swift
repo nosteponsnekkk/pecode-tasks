@@ -9,14 +9,14 @@ import Foundation
 import Combine
 
 public enum TaskSorting {
-    case `default`
-    case byDate
+    case byCreationDate
+    case byCompletionDate
     case byName
 }
 public final class TaskViewModel {
     
     @Published private var data: [TaskModel]  = []
-    @Published public var sorting: TaskSorting = .default
+    @Published public var sorting: TaskSorting = .byCompletionDate
     
     private var cancellables: Set<AnyCancellable> = []
     
@@ -88,7 +88,7 @@ extension TaskViewModel {
     }
     public func markTaskAsCompleted(at indexPath: IndexPath){
         let task = pendingTasks[indexPath.row]
-        CoreDataManager.shared.updateTaskEntity(task, with: TaskModel(title: task.title, description: task.description, completionDate: task.completionDate, isCompleted: true))
+        CoreDataManager.shared.updateTaskEntity(task, with: TaskModel(title: task.title, description: task.description, creationDate: task.creationDate, completionDate: task.completionDate, isCompleted: true))
         Task {
             await loadData()
         }
@@ -98,9 +98,9 @@ extension TaskViewModel {
     public var pendingTasks: [TaskModel] {
         let pendingTasks = data.filter({!$0.isCompleted})
         switch sorting {
-        case .default:
-            return pendingTasks
-        case .byDate:
+        case .byCreationDate:
+            return pendingTasks.sorted(by: { $0.creationDate > $1.creationDate })
+        case .byCompletionDate:
             return pendingTasks.sorted(by: { $0.completionDate < $1.completionDate })
         case .byName:
             return pendingTasks.sorted(by: { $0.title < $1.title })
@@ -109,9 +109,9 @@ extension TaskViewModel {
     public var completedTasks: [TaskModel] {
         let completedTasks = data.filter({$0.isCompleted})
         switch sorting {
-        case .default:
-            return completedTasks
-        case .byDate:
+        case .byCreationDate:
+            return completedTasks.sorted(by: { $0.creationDate > $1.creationDate })
+        case .byCompletionDate:
             return completedTasks.sorted(by: { $0.completionDate < $1.completionDate })
         case .byName:
             return completedTasks.sorted(by: { $0.title < $1.title })
