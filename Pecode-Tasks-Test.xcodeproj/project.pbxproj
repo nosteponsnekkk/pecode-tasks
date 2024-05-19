@@ -25,6 +25,7 @@
 		7CE847A72BF7B68F0073C739 /* TaskEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE847A52BF7B68F0073C739 /* TaskEntity.swift */; };
 		7CE847AB2BF7DCAE0073C739 /* PlaceholderLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE847AA2BF7DCAE0073C739 /* PlaceholderLabel.swift */; };
 		7CE847AD2BF8F3CF0073C739 /* CreateTaskController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE847AC2BF8F3CF0073C739 /* CreateTaskController.swift */; };
+		7CE847C12BF98F6B0073C739 /* CustomTextfield.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE847C02BF98F6B0073C739 /* CustomTextfield.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,7 @@
 		7CE847A52BF7B68F0073C739 /* TaskEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskEntity.swift; sourceTree = "<group>"; };
 		7CE847AA2BF7DCAE0073C739 /* PlaceholderLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderLabel.swift; sourceTree = "<group>"; };
 		7CE847AC2BF8F3CF0073C739 /* CreateTaskController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTaskController.swift; sourceTree = "<group>"; };
+		7CE847C02BF98F6B0073C739 /* CustomTextfield.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextfield.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,6 +170,7 @@
 			children = (
 				7CE8478B2BF76CE10073C739 /* CustomButtonItem.swift */,
 				7CE847AC2BF8F3CF0073C739 /* CreateTaskController.swift */,
+				7CE847C02BF98F6B0073C739 /* CustomTextfield.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -302,6 +305,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7CE847AD2BF8F3CF0073C739 /* CreateTaskController.swift in Sources */,
+				7CE847C12BF98F6B0073C739 /* CustomTextfield.swift in Sources */,
 				7CE847842BF753C00073C739 /* HomeViewController.swift in Sources */,
 				7CE847872BF76C5C0073C739 /* Extensions.swift in Sources */,
 				7CE847AB2BF7DCAE0073C739 /* PlaceholderLabel.swift in Sources */,

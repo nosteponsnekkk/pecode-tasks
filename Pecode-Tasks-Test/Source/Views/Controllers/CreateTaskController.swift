@@ -31,38 +31,23 @@ public final class CreateTaskController: UIView {
         picker.minimumDate = .now
         let today = Date()
         let calendar = Calendar.current
-        if let tomorrow = calendar.date(byAdding: .day, value: 1, to: today) {
+        let tomorrow = calendar.date(byAdding: .day, value: 1, to: today) ?? .now
+        if let date = taskModel?.completionDate {
+            picker.date = date >= .now ? date : tomorrow
+        } else {
             picker.date = tomorrow
         }
         return picker
     }()
-    private lazy var titleField: UITextField = {
-        let field = UITextField()
-        field.tintColor = .mainColor
+    private lazy var titleField: CustomTextfield = {
+        let field = CustomTextfield()
         field.placeholder = "Enter title for task"
-        field.font = .systemFont(ofSize: 14)
-        field.layer.cornerRadius = 12
-        field.layer.borderColor = UIColor.gray.cgColor
-        field.layer.borderWidth = 1
-        field.clearButtonMode = .whileEditing
-        field.leftView = UIView()
-        field.leftView?.frame.size = .init(width: 20, height: 40)
-        field.leftViewMode = .always
         field.delegate = self
         return field
     }()
-    private lazy var descriptionField: UITextField = {
-        let field = UITextField()
-        field.tintColor = .mainColor
+    private lazy var descriptionField: CustomTextfield = {
+        let field = CustomTextfield()
         field.placeholder = "Enter description for task"
-        field.font = .systemFont(ofSize: 14)
-        field.layer.cornerRadius = 12
-        field.layer.borderColor = UIColor.gray.cgColor
-        field.layer.borderWidth = 1
-        field.clearButtonMode = .whileEditing
-        field.leftView = UIView()
-        field.leftView?.frame.size = .init(width: 20, height: 40)
-        field.leftViewMode = .always
         field.delegate = self
         return field
     }()
@@ -115,7 +100,7 @@ public final class CreateTaskController: UIView {
             if !taskModel.description.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                 descriptionField.placeholder = taskModel.description
             }
-            if taskModel.completionDate > .now {
+            if taskModel.completionDate >= .now {
                 datePicker.date = taskModel.completionDate
             }
         }
@@ -147,6 +132,9 @@ public final class CreateTaskController: UIView {
     }
     public func moveScroll(by offset: CGFloat) {
         scrollView.contentOffset = CGPoint(x: 0, y: offset)
+    }
+    public func doFieldsContain(touch location: CGPoint) -> Bool {
+        return titleField.frame.contains(location) || descriptionField.frame.contains(location)
     }
 }
 //MARK: - Extensions

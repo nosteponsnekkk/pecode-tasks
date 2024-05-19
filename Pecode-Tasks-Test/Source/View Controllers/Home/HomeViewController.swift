@@ -13,7 +13,7 @@ public final class HomeViewController: UITableViewController {
     
     //MARK: - Data
     private let viewModel: TaskViewModel
-    private var expandedIndexes: Set<IndexPath> = []
+    private var expandedIndexes: [IndexPath : TaskModel] = [:]
 
     //MARK: - Subviews
     private lazy var clearBarButton: CustomButtonItem = {
@@ -83,6 +83,7 @@ public final class HomeViewController: UITableViewController {
     private func setupBindings(){
         viewModel.bind { [weak self] isDataEmpty in
             guard let self else { return }
+            expandedIndexes = [:]
             if isDataEmpty {
                 clearBarButton.disable()
                 toolbarItems = []
@@ -193,18 +194,12 @@ extension HomeViewController: TaskTableViewCellExpandableDelegate {
         if viewModel.pendingTasks.isEmpty {
             model = viewModel.completedTasks[indexPath.row]
         } else {
-            switch indexPath.section {
-            case 0:
-                model = viewModel.pendingTasks[indexPath.row]
-            case 1:
-                model = viewModel.completedTasks[indexPath.row]
-            default: return cell
-            }
+            model = getItem(at: indexPath)
         }
 
         cell.configure(with: model)
         
-        if expandedIndexes.contains(indexPath) {
+        if expandedIndexes[indexPath] == model {
             cell.isExpanded = true
         } else {
             cell.isExpanded = false
@@ -222,17 +217,11 @@ extension HomeViewController: TaskTableViewCellExpandableDelegate {
         if viewModel.pendingTasks.isEmpty {
             model = viewModel.completedTasks[indexPath.row]
         } else {
-            switch indexPath.section {
-            case 0:
-                model = viewModel.pendingTasks[indexPath.row]
-            case 1:
-                model = viewModel.completedTasks[indexPath.row]
-            default: return 0
-            }
+            model = getItem(at: indexPath)
         }
         cell.configure(with: model)
         
-        if expandedIndexes.contains(indexPath) {
+        if expandedIndexes[indexPath] == model {
             //if cell is expanded
             return cell.getDesiredHeight() + 60
         }
@@ -255,13 +244,7 @@ extension HomeViewController: TaskTableViewCellExpandableDelegate {
             if viewModel.pendingTasks.isEmpty {
                 model = viewModel.completedTasks[indexPath.row]
             } else {
-                switch indexPath.section {
-                case 0:
-                    model = viewModel.pendingTasks[indexPath.item]
-                case 1:
-                    model = viewModel.completedTasks[indexPath.item]
-                default: return
-                }
+                model = getItem(at: indexPath)
             }
             viewModel.deleteTask(model)
         }
@@ -290,15 +273,25 @@ extension HomeViewController: TaskTableViewCellExpandableDelegate {
 
     }
     public func didTapExpand(from cell: TaskTableViewCell) {
-        guard let indexPath = tableView.indexPath(for: cell) else { return }
-        expandedIndexes.insert(indexPath)
+        guard let indexPath = tableView.indexPath(for: cell), let model = getItem(at: indexPath) else { return }
+        expandedIndexes[indexPath] = model
         tableView.reloadRows(at: [indexPath], with: .automatic)
 
     }
     public func didTapCollapse(from cell: TaskTableViewCell) {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
-        expandedIndexes.remove(indexPath)
+        expandedIndexes[indexPath] = nil
         tableView.reloadRows(at: [indexPath], with: .automatic)
+
+    }
+    private func getItem(at indexPath: IndexPath) -> TaskModel? {
+        switch indexPath.section {
+        case 0:
+            return viewModel.pendingTasks[indexPath.item]
+        case 1:
+            return viewModel.completedTasks[indexPath.item]
+        default: return nil
+        }
 
     }
 }

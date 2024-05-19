@@ -16,6 +16,7 @@ public final class CreateTaskViewController: UIViewController {
     //MARK: - Handling keyboard state
     private var tapGesture: UITapGestureRecognizer?
     private var didExpand = false
+    private var spacing: CGFloat = 0
 
     //MARK: - Subviews
     private lazy var createController: CreateTaskController = {
@@ -82,7 +83,7 @@ public final class CreateTaskViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
 
-        tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+        tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard(_:)))
         if let tapGesture {
             tapGesture.cancelsTouchesInView = false
             view.addGestureRecognizer(tapGesture)
@@ -92,7 +93,8 @@ public final class CreateTaskViewController: UIViewController {
     @objc private func keyboardWillShow(notification: NSNotification){
         if let keyboardRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             if !didExpand && createController.frame.intersects(keyboardRect) {
-                createController.moveScroll(by: view.bounds.height - createButton.frame.maxY)
+                spacing = view.bounds.height - createButton.frame.maxY
+                createController.moveScroll(by: spacing)
                 didExpand = true
             } else { return }
         }
@@ -118,7 +120,9 @@ public final class CreateTaskViewController: UIViewController {
         }
         coordinator?.goBack()
     }
-    @objc private func hideKeyboard(){
+    @objc private func hideKeyboard(_ sender: UITapGestureRecognizer){
+        guard !createController.doFieldsContain(touch: CGPoint(x: sender.location(in: createController).x,
+                                                               y: sender.location(in: createController).y + Double(spacing))) else { return }
         createController.hideKeyboard()
     }
 }
