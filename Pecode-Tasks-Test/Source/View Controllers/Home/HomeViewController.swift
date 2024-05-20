@@ -190,13 +190,7 @@ extension HomeViewController: TaskTableViewCellExpandableDelegate {
     public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withClass: TaskTableViewCell.self, for: indexPath)
         
-        var model: TaskModel?
-        
-        if viewModel.pendingTasks.isEmpty {
-            model = viewModel.completedTasks[indexPath.row]
-        } else {
-            model = getItem(at: indexPath)
-        }
+        let model = getItem(at: indexPath)
 
         cell.configure(with: model)
         
@@ -213,13 +207,8 @@ extension HomeViewController: TaskTableViewCellExpandableDelegate {
         let cell = TaskTableViewCell(style: .default, reuseIdentifier: String(describing: TaskTableViewCell.self))
         cell.frame.size = .init(width: tableView.bounds.width, height: 70)
 
-        var model: TaskModel?
-        
-        if viewModel.pendingTasks.isEmpty {
-            model = viewModel.completedTasks[indexPath.row]
-        } else {
-            model = getItem(at: indexPath)
-        }
+        let model = getItem(at: indexPath)
+
         cell.configure(with: model)
         
         if expandedIndexes[indexPath] == model {
@@ -240,13 +229,9 @@ extension HomeViewController: TaskTableViewCellExpandableDelegate {
     public override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .normal, title: nil) { [weak self] _, _, _ in
             guard let self else { return }
-            var model: TaskModel?
             
-            if viewModel.pendingTasks.isEmpty {
-                model = viewModel.completedTasks[indexPath.row]
-            } else {
-                model = getItem(at: indexPath)
-            }
+            let model = getItem(at: indexPath)
+
             viewModel.deleteTask(model)
         }
         deleteAction.backgroundColor = .mainRed
@@ -286,13 +271,17 @@ extension HomeViewController: TaskTableViewCellExpandableDelegate {
 
     }
     private func getItem(at indexPath: IndexPath) -> TaskModel? {
-        switch indexPath.section {
-        case 0:
-            return viewModel.pendingTasks[indexPath.item]
-        case 1:
-            return viewModel.completedTasks[indexPath.item]
-        default: return nil
+        if viewModel.pendingTasks.isEmpty {
+            return viewModel.completedTasks[indexPath.row]
+        } else {
+            
+            switch indexPath.section {
+            case 0:
+                return viewModel.pendingTasks[indexPath.item]
+            case 1:
+                return viewModel.completedTasks[indexPath.item]
+            default: return nil
+            }
         }
-
     }
 }
